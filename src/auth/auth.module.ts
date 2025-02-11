@@ -29,6 +29,6 @@ import { UsersService } from 'src/users/users.service';
       },
     }),
   ],
-  exports: [JwtStrategy, PassportModule, JwtModule, PassportModule],
+  exports: [JwtStrategy, JwtModule, PassportModule],
 })
 export class AuthModule {}

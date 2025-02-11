@@ -15,7 +15,7 @@ model Users {
   roleId     String
   roles      Roles     @relation(fields: [roleId], references: [roleId])
   Devices    Devices[]
-  Events     Events[]
+  Sleep      Sleep[]
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
 }
@@ -38,10 +38,10 @@ model Devices {
   updated_at DateTime @updatedAt
 }
 
-model Events {
-  eventId    String   @id @default(uuid())
-  oxygen     Float
-  heartRate  Float
+model Sleep {
+  sleepId    String   @id @default(uuid())
+  startSleep DateTime
+  endSleep   DateTime?
   userId     String
   user       Users    @relation(fields: [userId], references: [userId])
   created_at DateTime @default(now())

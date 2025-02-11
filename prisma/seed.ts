@@ -20,7 +20,7 @@ async function main() {
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-  const user = await prisma.users.create({
+  const adminUser = await prisma.users.create({
     data: {
       name: 'Elkin Carriel',
       email: 'escarriel@sudamericano.edu.ec',
@@ -28,8 +28,6 @@ async function main() {
       roleId: adminRole.roleId,
     },
   });
-
-  console.log('Seed data created');
 
   const user2 = await prisma.users.create({
     data: {
@@ -44,7 +42,7 @@ async function main() {
     data: {
       name: 'Device 1',
       status: false,
-      userId: user.userId,
+      userId: adminUser.userId,
     },
   });
 
@@ -56,24 +54,30 @@ async function main() {
     },
   });
 
-  const event1 = await prisma.events.create({
+  const sleep1 = await prisma.sleep.create({
     data: {
-      oxygen: 98.1,
-      heartRate: 80.1,
-      userId: user.userId,
+      startSleep: new Date('2023-08-01T23:00:00.000Z'),
+      endSleep: new Date('2023-08-02T07:00:00.000Z'),
+      userId: adminUser.userId,
     },
   });
 
-  const event2 = await prisma.events.create({
+  const sleep2 = await prisma.sleep.create({
     data: {
-      oxygen: 90,
-      heartRate: 81,
+      startSleep: new Date('2023-08-01T23:30:00.000Z'),
+      endSleep: new Date('2023-08-02T06:45:00.000Z'),
       userId: user2.userId,
     },
   });
 
-  const variables = { device1, device2, event1, event2 };
-  console.log(`Datos de seed ${variables}\n creados exitosamente`);
+  console.log('Seed data created successfully', {
+    adminUser,
+    user2,
+    device1,
+    device2,
+    sleep1,
+    sleep2,
+  });
 }
 
 main()
