@@ -3,10 +3,25 @@ import { SleepService } from './sleep.service';
 import { CreateSleepDto } from './dto/create-sleep.dto';
 import { Auth } from 'src/auth/decorators';
 import { ValidRoles } from 'src/auth/interfaces/roles';
+import { log } from 'console';
 
 @Controller('sleep')
 export class SleepController {
   constructor(private readonly sleepService: SleepService) {}
+
+  @Auth(ValidRoles.user, ValidRoles.admin)
+  @Post('send-data/:sleepId')
+  postData(
+    @Param('sleepId') sleepId: string,
+    @Body()
+    data: {
+      bloodOxygen: number;
+      heartRate: number;
+    },
+  ) {
+    console.log(data);
+    return this.sleepService.saveData(sleepId, data);
+  }
 
   @Auth(ValidRoles.admin)
   @Get('admin')

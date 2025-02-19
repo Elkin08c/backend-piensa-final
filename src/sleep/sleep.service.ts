@@ -1,15 +1,11 @@
-import {
-  Injectable,
-  BadRequestException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateSleepDto } from './dto/create-sleep.dto';
-import { UpdateSleepDto } from './dto/update-sleep.dto';
 
 @Injectable()
 export class SleepService {
   constructor(private readonly prisma: PrismaService) {}
+  private sleepData: Array<{ bloodOxygen: number; heartRate: number }> = [];
 
   async create(createSleepDto: CreateSleepDto, userId: string) {
     const startSleep = new Date(createSleepDto.startSleep);
@@ -17,7 +13,6 @@ export class SleepService {
       ? new Date(createSleepDto.endSleep)
       : null;
 
-    // Validar que la fecha de inicio no sea mayor que la fecha final
     if (endSleep && startSleep > endSleep) {
       throw new BadRequestException(
         'La fecha de inicio no puede ser mayor a la fecha final.',
@@ -85,5 +80,28 @@ export class SleepService {
       };
     });
     return metrics;
+  }
+
+  async saveData(
+    sleepId: string,
+    data: { bloodOxygen: number; heartRate: number },
+  ) {
+    try {
+      const updatedSleep = await this.prisma.sleep.update({
+        where: { sleepId },
+        data: {
+          healthData: {
+            push: data,
+          },
+        },
+      });
+
+      return {
+        message: 'Sleep data saved successfully',
+        data: updatedSleep.healthData,
+      };
+    } catch (error) {
+      throw new Error(`Failed to save sleep data: ${error.message}`);
+    }
   }
 }

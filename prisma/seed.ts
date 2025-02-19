@@ -59,14 +59,24 @@ async function main() {
       startSleep: new Date('2023-08-01T23:00:00.000Z'),
       endSleep: new Date('2023-08-02T07:00:00.000Z'),
       userId: adminUser.userId,
+      healthData: [
+        { bloodOxygen: 95, heartRate: 60 },
+        { bloodOxygen: 96, heartRate: 58 },
+        { bloodOxygen: 97, heartRate: 59 },
+      ],
     },
   });
-
+  
   const sleep2 = await prisma.sleep.create({
     data: {
       startSleep: new Date('2023-08-01T23:30:00.000Z'),
       endSleep: new Date('2023-08-02T06:45:00.000Z'),
       userId: user2.userId,
+      healthData: [
+        { bloodOxygen: 94, heartRate: 62 },
+        { bloodOxygen: 93, heartRate: 64 },
+        { bloodOxygen: 95, heartRate: 61 },
+      ],
     },
   });
 

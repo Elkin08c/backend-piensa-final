@@ -44,6 +44,7 @@ model Sleep {
   endSleep   DateTime?
   userId     String
   user       Users    @relation(fields: [userId], references: [userId])
+  healthData Json[]
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
